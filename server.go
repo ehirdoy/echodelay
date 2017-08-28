@@ -25,13 +25,13 @@ func main() {
 
 	buf := make([]byte, 1024)
 	log.Println("Starting udp server...")
-	for {
+	for i := 0; i < 3; i++ {
 		n, addr, err := conn.ReadFromUDP(buf)
 		if err != nil {
 			log.Fatalln(err)
 			os.Exit(1)
 		}
-		log.Printf("Reciving data: %s from %s", string(buf[:n]), addr.String())
+		log.Printf("%d: Reciving data: %s from %s", i, string(buf[:n]), addr.String())
 		go reply(conn, addr)
 	}
 }

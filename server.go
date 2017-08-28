@@ -6,10 +6,11 @@ import (
 	"os"
 )
 
-func reply(conn *net.UDPConn, addr *net.UDPAddr) {
+func reply(conn *net.UDPConn, addr *net.UDPAddr, done chan bool) {
 	log.Printf("Sending data..")
 	conn.WriteTo([]byte("Pong"), addr)
 	log.Printf("Complete Sending data..")
+	done <- true
 }
 
 func main() {
@@ -23,6 +24,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	done := make(chan bool, 1)
 	buf := make([]byte, 1024)
 	log.Println("Starting udp server...")
 	for i := 0; i < 3; i++ {
@@ -32,6 +34,7 @@ func main() {
 			os.Exit(1)
 		}
 		log.Printf("%d: Reciving data: %s from %s", i, string(buf[:n]), addr.String())
-		go reply(conn, addr)
+		go reply(conn, addr, done)
+		<-done
 	}
 }

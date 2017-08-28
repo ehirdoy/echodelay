@@ -4,9 +4,15 @@ import (
 	"log"
 	"net"
 	"os"
+	"time"
 )
 
 func reply(conn *net.UDPConn, addr *net.UDPAddr, done chan bool, count int) {
+	dur := time.Duration(count) * time.Second
+	log.Printf("%d: Sleeping %d[sec]", count, count)
+	//dur := time.Duration(count) * time.Minute
+	//log.Printf("%d: Sleeping %d[min]", count, count)
+	time.Sleep(dur)
 	log.Printf("%d: Sending data..", count)
 	conn.WriteTo([]byte("Pong"), addr)
 	log.Printf("%d: Complete Sending data..", count)

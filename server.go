@@ -6,10 +6,10 @@ import (
 	"os"
 )
 
-func reply(conn *net.UDPConn, addr *net.UDPAddr, done chan bool) {
-	log.Printf("Sending data..")
+func reply(conn *net.UDPConn, addr *net.UDPAddr, done chan bool, count int) {
+	log.Printf("%d: Sending data..", count)
 	conn.WriteTo([]byte("Pong"), addr)
-	log.Printf("Complete Sending data..")
+	log.Printf("%d: Complete Sending data..", count)
 	done <- true
 }
 
@@ -34,7 +34,7 @@ func main() {
 			os.Exit(1)
 		}
 		log.Printf("%d: Reciving data: %s from %s", i, string(buf[:n]), addr.String())
-		go reply(conn, addr, done)
+		go reply(conn, addr, done, i)
 		<-done
 	}
 }

@@ -7,7 +7,11 @@ import (
 )
 
 func main() {
-	conn, err := net.Dial("udp", "127.0.0.1:8080")
+	dst := &net.UDPAddr{
+		IP:   net.ParseIP("127.0.0.1"),
+		Port: 8080,
+	}
+	conn, err := net.Dial("udp", dst.String())
 	if err != nil {
 		log.Fatalln(err)
 		os.Exit(1)

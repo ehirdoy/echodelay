@@ -13,7 +13,7 @@ func main() {
 		os.Exit(1)
 	}
 	defer conn.Close()
-	
+
 	n, err := conn.Write([]byte("Ping"))
 	if err != nil {
 		log.Fatalln(err)

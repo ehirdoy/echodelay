@@ -7,15 +7,15 @@ import (
 	"time"
 )
 
-func reply(conn *net.UDPConn, addr *net.UDPAddr, done chan bool, count int) {
-	dur := time.Duration(count) * time.Second
-	log.Printf("%d: Sleeping %d[sec]", count, count)
-	//dur := time.Duration(count) * time.Minute
-	//log.Printf("%d: Sleeping %d[min]", count, count)
+func reply(conn *net.UDPConn, addr *net.UDPAddr, done chan bool, idx int) {
+	dur := time.Duration(idx) * time.Second
+	log.Printf("%d: Sleeping %d[sec]", idx, idx)
+	//dur := time.Duration(idx) * time.Minute
+	//log.Printf("%d: Sleeping %d[min]", idx, idx)
 	time.Sleep(dur)
-	log.Printf("%d: Sending data..", count)
+	log.Printf("%d: Sending data..", idx)
 	conn.WriteTo([]byte("Pong"), addr)
-	log.Printf("%d: Complete Sending data..", count)
+	log.Printf("%d: Complete Sending data..", idx)
 	done <- true
 }
 

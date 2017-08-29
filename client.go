@@ -7,7 +7,10 @@ import (
 	"os"
 )
 
-func ping(conn *net.UDPConn, done chan bool, idx int) {
+var conn *net.UDPConn
+var done chan bool
+
+func ping(idx int) {
 	n, err := conn.Write([]byte("Ping"))
 	if err != nil {
 		log.Fatalln(err)
@@ -25,6 +28,8 @@ func ping(conn *net.UDPConn, done chan bool, idx int) {
 }
 
 func main() {
+	var err error
+
 	da := flag.String("addr", "127.0.0.1", "destination IP address")
 	dp := flag.Int("port", 5683, "destination IP address")
 	flag.Parse()
@@ -34,16 +39,16 @@ func main() {
 		Port: *dp,
 	}
 
-	conn, err := net.DialUDP("udp", nil, daddr)
+	conn, err = net.DialUDP("udp", nil, daddr)
 	if err != nil {
 		log.Fatalln(err)
 		os.Exit(1)
 	}
 	defer conn.Close()
 
-	done := make(chan bool, 1)
+	done = make(chan bool, 1)
 	for i := 0; i < 3; i++ {
-		ping(conn, done, i)
+		ping(i)
 		<-done
 	}
 }

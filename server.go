@@ -8,7 +8,10 @@ import (
 	"time"
 )
 
-func reply(conn *net.UDPConn, addr *net.UDPAddr, done chan bool, idx int) {
+var conn *net.UDPConn
+var done chan bool
+
+func reply(addr *net.UDPAddr, idx int) {
 	dur := time.Duration(idx) * time.Second
 	log.Printf("%d: Sleeping %d[sec]", idx, idx)
 	//dur := time.Duration(idx) * time.Minute
@@ -21,6 +24,8 @@ func reply(conn *net.UDPConn, addr *net.UDPAddr, done chan bool, idx int) {
 }
 
 func main() {
+	var err error
+
 	la := flag.String("addr", "127.0.0.1", "local IP address")
 	lp := flag.Int("port", 5683, "local port")
 	flag.Parse()
@@ -30,13 +35,13 @@ func main() {
 		Port: *lp,
 	}
 
-	conn, err := net.ListenUDP("udp", laddr)
+	conn, err = net.ListenUDP("udp", laddr)
 	if err != nil {
 		log.Fatalln(err)
 		os.Exit(1)
 	}
 
-	done := make(chan bool, 1)
+	done = make(chan bool, 1)
 	buf := make([]byte, 1024)
 	log.Println("Starting udp server...")
 	for i := 0; i < 3; i++ {
@@ -46,7 +51,7 @@ func main() {
 			os.Exit(1)
 		}
 		log.Printf("%d: Reciving data: %s from %s", i, string(buf[:n]), addr.String())
-		go reply(conn, addr, done, i)
+		go reply(addr, i)
 		<-done
 	}
 }

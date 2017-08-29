@@ -26,7 +26,7 @@ func ping(conn *net.UDPConn, done chan bool, idx int) {
 
 func main() {
 	da := flag.String("addr", "127.0.0.1", "destination IP address")
-	dp := flag.Int("port", 8080, "destination IP address")
+	dp := flag.Int("port", 5683, "destination IP address")
 	flag.Parse()
 
 	daddr := &net.UDPAddr{

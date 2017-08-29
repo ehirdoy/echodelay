@@ -22,7 +22,7 @@ func reply(conn *net.UDPConn, addr *net.UDPAddr, done chan bool, idx int) {
 
 func main() {
 	la := flag.String("addr", "127.0.0.1", "local IP address")
-	lp := flag.Int("port", 8080, "local port")
+	lp := flag.Int("port", 5683, "local port")
 	flag.Parse()
 
 	laddr := &net.UDPAddr{

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net"
 	"os"
@@ -24,11 +25,16 @@ func ping(conn *net.UDPConn, done chan bool, idx int) {
 }
 
 func main() {
-	dst := &net.UDPAddr{
-		IP:   net.ParseIP("127.0.0.1"),
-		Port: 8080,
+	da := flag.String("addr", "127.0.0.1", "destination IP address")
+	dp := flag.Int("port", 8080, "destination IP address")
+	flag.Parse()
+
+	daddr := &net.UDPAddr{
+		IP:   net.ParseIP(*da),
+		Port: *dp,
 	}
-	conn, err := net.DialUDP("udp", nil, dst)
+
+	conn, err := net.DialUDP("udp", nil, daddr)
 	if err != nil {
 		log.Fatalln(err)
 		os.Exit(1)

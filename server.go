@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net"
 	"os"
@@ -20,11 +21,16 @@ func reply(conn *net.UDPConn, addr *net.UDPAddr, done chan bool, idx int) {
 }
 
 func main() {
-	src := &net.UDPAddr{
-		IP:   net.ParseIP("127.0.0.1"),
-		Port: 8080,
+	la := flag.String("addr", "127.0.0.1", "local IP address")
+	lp := flag.Int("port", 8080, "local port")
+	flag.Parse()
+
+	laddr := &net.UDPAddr{
+		IP:   net.ParseIP(*la),
+		Port: *lp,
 	}
-	conn, err := net.ListenUDP("udp", src)
+
+	conn, err := net.ListenUDP("udp", laddr)
 	if err != nil {
 		log.Fatalln(err)
 		os.Exit(1)
